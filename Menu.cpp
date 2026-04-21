@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Menu.h"
 #include "Napisy.h"
 #include "Uzytkownicy.h"
@@ -6,6 +7,7 @@
 using namespace std;
 
 void uruchomMenu() {
+    vector<Uzytkownik> uzytkownicy;
     int wybor;
 
     do {
@@ -22,7 +24,7 @@ void uruchomMenu() {
             menuNapisy();
             break;
         case 2:
-            menuUzytkownicy();
+            menuUzytkownicy(uzytkownicy);
             break;
         case 0:
             cout << "Koniec programu.\n";

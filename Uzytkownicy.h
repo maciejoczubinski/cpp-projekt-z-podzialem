@@ -9,6 +9,11 @@ struct Uzytkownik {
     int wiek;
 };
 
-void menuUzytkownicy();
+void dodajUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
+void wyswietlUzytkownikow(const std::vector<Uzytkownik> & uzytkownicy);
+void wyszukajUzytkownika(const std::vector<Uzytkownik> & uzytkownicy);
+void usunUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
+void edytujUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
+void menuUzytkownicy(std::vector<Uzytkownik>& uzytkownicy);
 
 #endif
