@@ -1,23 +1,47 @@
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <limits>
+#include <fstream>
 #include "Uzytkownicy.h"
-
 using namespace std;
 
-void dodajUzytkownika(vector<Uzytkownik> & uzytkownicy) {
-    Uzytkownik nowy;
+// ===== KLASA =====
+
+Uzytkownik::Uzytkownik() : wiek(0) {}
+
+Uzytkownik::Uzytkownik(const string& imie, int wiek, const string& haslo)
+    : imie(imie), wiek(wiek), haslo(haslo) {}
+
+string Uzytkownik::getImie() const { return imie; }
+int    Uzytkownik::getWiek() const { return wiek; }
+string Uzytkownik::getHaslo() const { return haslo; }
+
+void Uzytkownik::setImie(const string& i) {
+    if (i.empty()) { cout << "Blad: imie nie moze byc puste.\n"; return; }
+    imie = i;
+}
+void Uzytkownik::setWiek(int w) {
+    if (w < 0 || w > 150) { cout << "Blad: niepoprawny wiek.\n"; return; }
+    wiek = w;
+}
+void Uzytkownik::setHaslo(const string& h) {
+    if (h.size() < 3) { cout << "Blad: haslo min. 3 znaki.\n"; return; }
+    haslo = h;
+}
+
+// ===== FUNKCJE =====
+
+void dodajUzytkownika(vector<Uzytkownik>& uzytkownicy) {
+    string imie, haslo;
+    int wiek;
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "Podaj imie: ";
+    getline(cin, imie);
 
-    cout << "Podaj imie uzytkownika: ";
-    getline(cin, nowy.imie);
-
-    cout << "Podaj wiek uzytkownika: ";
-    cin >> nowy.wiek;
-
+    cout << "Podaj wiek: ";
+    cin >> wiek;
     if (cin.fail()) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -26,164 +50,83 @@ void dodajUzytkownika(vector<Uzytkownik> & uzytkownicy) {
     }
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << "Podaj haslo: ";
-    getline(cin, nowy.haslo);
+    cout << "Podaj haslo (min. 3 znaki): ";
+    getline(cin, haslo);
 
-    uzytkownicy.push_back(nowy);
-    cout << "Uzytkownik zostal dodany.\n";
-    zapiszDoPliku(uzytkownicy);
+    uzytkownicy.push_back(Uzytkownik(imie, wiek, haslo));
+    cout << "Uzytkownik dodany.\n";
 }
 
-void wyswetlUzytkownikow(const vector<Uzytkownik> & uzytkownicy) {
-    if(uzytkownicy.empty()) {
-        cout << "Brak uzytkownikow.\n";
-        return;
-    }
-
+void wyswetlUzytkownikow(const vector<Uzytkownik>& uzytkownicy) {
+    if (uzytkownicy.empty()) { cout << "Brak uzytkownikow.\n"; return; }
     cout << "\n===== LISTA UZYTKOWNIKOW =====\n";
-    for(size_t i = 0; i < uzytkownicy.size(); i++) {
-        cout << i + 1 << ". Imie: " << uzytkownicy[i].imie << ", wiek: " << uzytkownicy[i].wiek << "\n";
+    for (size_t i = 0; i < uzytkownicy.size(); i++) {
+        cout << i + 1 << ". " << uzytkownicy[i].getImie()
+             << ", wiek: " << uzytkownicy[i].getWiek() << "\n";
     }
 }
 
-void wyszukajUzytkownika(const vector<Uzytkownik> & uzytkownicy) {
-    if(uzytkownicy.empty()) {
-        cout << "Brak uzytkownikow\n";
-        return;
-    }
+void wyszukajUzytkownika(const vector<Uzytkownik>& uzytkownicy) {
+    if (uzytkownicy.empty()) { cout << "Brak uzytkownikow.\n"; return; }
 
-    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     string imie;
     cout << "Podaj imie do wyszukania: ";
     getline(cin, imie);
 
     bool znaleziono = false;
-
     for (size_t i = 0; i < uzytkownicy.size(); i++) {
-        if (uzytkownicy[i].imie == imie) {
-            cout << i + 1 << ". Imie: " << uzytkownicy[i].imie << " Wiek: " << uzytkownicy[i].wiek << "\n";
+        if (uzytkownicy[i].getImie() == imie) {
+            cout << i + 1 << ". " << uzytkownicy[i].getImie()
+                 << ", wiek: " << uzytkownicy[i].getWiek() << "\n";
             znaleziono = true;
         }
     }
-
-    if (!znaleziono) {
-        cout << "Nie znaleziono uzytkownika o imieniu: " << imie << "\n";
-    }
+    if (!znaleziono) cout << "Nie znaleziono: " << imie << "\n";
 }
 
 void usunUzytkownika(vector<Uzytkownik>& uzytkownicy) {
-    if (uzytkownicy.empty()) {
-        cout << "Brak uzytkownikow.\n";
-        return;
-    }
-
+    if (uzytkownicy.empty()) { cout << "Brak uzytkownikow.\n"; return; }
     wyswetlUzytkownikow(uzytkownicy);
-
-    cout << "Podaj uzytkownika do usuniecia: ";
+    cout << "Podaj numer do usuniecia: ";
     int numer;
     cin >> numer;
-
-    if (numer <1 || numer > (int)uzytkownicy.size()) {
-        cout << "Niepoprawny numer.\n";
-        return;
+    if (numer < 1 || numer > (int)uzytkownicy.size()) {
+        cout << "Niepoprawny numer.\n"; return;
     }
-
     uzytkownicy.erase(uzytkownicy.begin() + numer - 1);
-    cout << "Uzytkownik zostal usuniety.\n";
+    cout << "Uzytkownik usuniety.\n";
 }
 
 void edytujUzytkownika(vector<Uzytkownik>& uzytkownicy) {
-    if (uzytkownicy.empty()) {
-        cout << "Brak uzytkownikow.\n";
-        return;
-    }
-
+    if (uzytkownicy.empty()) { cout << "Brak uzytkownikow.\n"; return; }
     wyswetlUzytkownikow(uzytkownicy);
-
-    cout << "Podaj numer uzytkownika do edycji: ";
+    cout << "Podaj numer do edycji: ";
     int numer;
     cin >> numer;
-
     if (numer < 1 || numer > (int)uzytkownicy.size()) {
-        cout << "Niepoprawny numer.\n";
-        return;
+        cout << "Niepoprawny numer.\n"; return;
     }
 
-    Uzytkownik& u = uzytkownicy[numer -1]; // referencja do elementu w wektorze
+    Uzytkownik* u = &uzytkownicy[numer - 1];   // wskaznik!
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << "Nowe imie (obecne: " << u.imie << "): ";
-    getline(cin, u.imie);
+    string noweImie;
+    cout << "Nowe imie (obecne: " << u->getImie() << "): ";
+    getline(cin, noweImie);
+    u->setImie(noweImie);
 
-    cout << "Nowy wiek(obecny: " << u.wiek << "): ";
-    cin >> u.wiek;
-
+    cout << "Nowy wiek (obecny: " << u->getWiek() << "): ";
+    int nowyWiek;
+    cin >> nowyWiek;
     if (cin.fail()) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Niepoprawny wiek - edycja anulowana.\n";
-        return;
+        cout << "Niepoprawny wiek.\n"; return;
     }
+    u->setWiek(nowyWiek);
 
-    cout << "Uzytkownik zostal zaktualizowany.\n";
-}
-
-void zapiszDoPliku(const std::vector<Uzytkownik>& uzytkownicy) {
-    std::ofstream plik("uzytkownicy.txt");
-
-    if(!plik.is_open()) {
-        std::cout << "Blad otwarcia pliku do zapisu!\n";
-        return;
-    }
-
-    for(const auto& u : uzytkownicy) {
-        plik << u.imie << " " << u.wiek <<  u.haslo <<::endl;
-    }
-    plik.close();
-}
-
-void wczytajZPliku(std::vector<Uzytkownik>& uzytkownicy){
-    std::ifstream plik("uzytkownicy.txt");
-
-    if(!plik.is_open()) {
-        std::cout << "Brak pliku.\n";
-        return;
-    }
-
-    Uzytkownik u;
-
-    while (plik >> u.imie >> u.wiek) {
-        plik >> u.wiek;
-        plik.ignore();
-        getline(plik, u.haslo);
-        uzytkownicy.push_back(u);
-    }
-    plik.close();
-}
-
-bool zalogujUzytkownika(const vector<Uzytkownik>& uzytkownicy) {
-    if (uzytkownicy.empty()){
-        cout << "Brak uzytkownikow w systemie.\n";
-        return false;
-    }
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    string imie, haslo;
-
-    cout << "Podaj imie: ";
-    getline(cin, imie);
-    cout << "Podaj haslo ";
-    getline(cin, haslo);
-
-    for (const auto& u : uzytkownicy) {
-        if (u.imie == imie && u.haslo == haslo) {
-            cout << "Zalogowanow pomyslnie. Witaj, " << u.imie << "!\n";
-            return true;
-        }
-    }
-
-    cout << "Niepoprwane imie lub haslo.\n";
-    return false;
+    cout << "Uzytkownik zaktualizowany.\n";
 }
 
 void menuUzytkownicy(vector<Uzytkownik>& uzytkownicy) {
@@ -223,4 +166,43 @@ void menuUzytkownicy(vector<Uzytkownik>& uzytkownicy) {
                 cout << "Niepoprawny wybor.\n";
         }
     } while (wybor != 0);
+}
+
+void zapiszDoPliku(const vector<Uzytkownik>& uzytkownicy) {
+    ofstream plik("uzytkownicy.txt");
+    for (const auto& u : uzytkownicy) {
+        plik << u.getImie() << "\n" << u.getWiek() << "\n" << u.getHaslo() << "\n";
+    }
+}
+
+void wczytajZPliku(vector<Uzytkownik>& uzytkownicy) {
+    ifstream plik("uzytkownicy.txt");
+    if (!plik.is_open()) return;
+    uzytkownicy.clear();
+    string imie, haslo;
+    int wiek;
+    while (getline(plik, imie)) {
+        plik >> wiek;
+        plik.ignore();
+        getline(plik, haslo);
+        uzytkownicy.push_back(Uzytkownik(imie, wiek, haslo));
+    }
+}
+
+bool zalogujUzytkownika(const vector<Uzytkownik>& uzytkownicy) {
+    if (uzytkownicy.empty()) { cout << "Brak uzytkownikow.\n"; return false; }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string imie, haslo;
+    cout << "Podaj imie: ";
+    getline(cin, imie);
+    cout << "Podaj haslo: ";
+    getline(cin, haslo);
+    for (const auto& u : uzytkownicy) {
+        if (u.getImie() == imie && u.getHaslo() == haslo) {
+            cout << "Witaj, " << u.getImie() << "!\n";
+            return true;
+        }
+    }
+    cout << "Niepoprawne dane.\n";
+    return false;
 }
