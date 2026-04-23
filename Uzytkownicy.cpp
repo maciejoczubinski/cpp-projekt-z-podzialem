@@ -25,6 +25,10 @@ void dodajUzytkownika(vector<Uzytkownik> & uzytkownicy) {
         return;
     }
 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "Podaj haslo: ";
+    getline(cin, nowy.haslo);
+
     uzytkownicy.push_back(nowy);
     cout << "Uzytkownik zostal dodany.\n";
     zapiszDoPliku(uzytkownicy);
@@ -133,7 +137,7 @@ void zapiszDoPliku(const std::vector<Uzytkownik>& uzytkownicy) {
     }
 
     for(const auto& u : uzytkownicy) {
-        plik << u.imie << " " << u.wiek << std::endl;
+        plik << u.imie << " " << u.wiek <<  u.haslo <<::endl;
     }
     plik.close();
 }
@@ -149,9 +153,37 @@ void wczytajZPliku(std::vector<Uzytkownik>& uzytkownicy){
     Uzytkownik u;
 
     while (plik >> u.imie >> u.wiek) {
+        plik >> u.wiek;
+        plik.ignore();
+        getline(plik, u.haslo);
         uzytkownicy.push_back(u);
     }
     plik.close();
+}
+
+bool zalogujUzytkownika(const vector<Uzytkownik>& uzytkownicy) {
+    if (uzytkownicy.empty()){
+        cout << "Brak uzytkownikow w systemie.\n";
+        return false;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string imie, haslo;
+
+    cout << "Podaj imie: ";
+    getline(cin, imie);
+    cout << "Podaj haslo ";
+    getline(cin, haslo);
+
+    for (const auto& u : uzytkownicy) {
+        if (u.imie == imie && u.haslo == haslo) {
+            cout << "Zalogowanow pomyslnie. Witaj, " << u.imie << "!\n";
+            return true;
+        }
+    }
+
+    cout << "Niepoprwane imie lub haslo.\n";
+    return false;
 }
 
 void menuUzytkownicy(vector<Uzytkownik>& uzytkownicy) {

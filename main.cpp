@@ -10,5 +10,6 @@ int main() {
     wczytajZPliku(uzytkownicy);
 
     uruchomMenu(uzytkownicy);
+    zapiszDoPliku(uzytkownicy);
     return 0;
 }

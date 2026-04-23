@@ -2,6 +2,7 @@
 #include <vector>
 #include "Menu.h"
 #include "Napisy.h"
+#include "Uzytkownicy.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ void uruchomMenu(vector<Uzytkownik>& uzytkownicy) {
         cout << "\n===== MENU GLOWNE =====\n";
         cout << "1. Operacje na napisach\n";
         cout << "2. Uzytkownicy\n";
+        cout << "3. Zaloguj sie\n";
         cout << "0. Wyjscie\n";
         cout << "Wybierz opcje: ";
         cin >> wybor;
@@ -25,6 +27,8 @@ void uruchomMenu(vector<Uzytkownik>& uzytkownicy) {
         case 2:
             menuUzytkownicy(uzytkownicy);
             break;
+        case 3:
+            zalogujUzytkownika(uzytkownicy);
         case 0:
             cout << "Koniec programu.\n";
             break;

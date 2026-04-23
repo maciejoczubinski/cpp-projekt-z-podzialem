@@ -7,6 +7,7 @@
 struct Uzytkownik {
     std::string imie;
     int wiek;
+    std::string haslo;
 };
 
 void dodajUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
@@ -17,5 +18,6 @@ void edytujUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
 void menuUzytkownicy(std::vector<Uzytkownik>& uzytkownicy);
 void zapiszDoPliku(const std::vector<Uzytkownik>& uzytkownicy);
 void wczytajZPliku(std::vector<Uzytkownik>& uzytkownicy);
+bool zalogujUzytkownika(const std::vector<Uzytkownik>& uzytkownicy);
 
 #endif
