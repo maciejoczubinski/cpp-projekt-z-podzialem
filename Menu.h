@@ -1,6 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
 
-void uruchomMenu();
+#include "Uzytkownicy.h" 
+#include <vector>
+
+void uruchomMenu(std::vector<Uzytkownik>& uzytkownicy);
 
 #endif

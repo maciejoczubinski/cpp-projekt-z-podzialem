@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -26,6 +27,7 @@ void dodajUzytkownika(vector<Uzytkownik> & uzytkownicy) {
 
     uzytkownicy.push_back(nowy);
     cout << "Uzytkownik zostal dodany.\n";
+    zapiszDoPliku(uzytkownicy);
 }
 
 void wyswetlUzytkownikow(const vector<Uzytkownik> & uzytkownicy) {
@@ -120,6 +122,36 @@ void edytujUzytkownika(vector<Uzytkownik>& uzytkownicy) {
     }
 
     cout << "Uzytkownik zostal zaktualizowany.\n";
+}
+
+void zapiszDoPliku(const std::vector<Uzytkownik>& uzytkownicy) {
+    std::ofstream plik("uzytkownicy.txt");
+
+    if(!plik.is_open()) {
+        std::cout << "Blad otwarcia pliku do zapisu!\n";
+        return;
+    }
+
+    for(const auto& u : uzytkownicy) {
+        plik << u.imie << " " << u.wiek << std::endl;
+    }
+    plik.close();
+}
+
+void wczytajZPliku(std::vector<Uzytkownik>& uzytkownicy){
+    std::ifstream plik("uzytkownicy.txt");
+
+    if(!plik.is_open()) {
+        std::cout << "Brak pliku.\n";
+        return;
+    }
+
+    Uzytkownik u;
+
+    while (plik >> u.imie >> u.wiek) {
+        uzytkownicy.push_back(u);
+    }
+    plik.close();
 }
 
 void menuUzytkownicy(vector<Uzytkownik>& uzytkownicy) {

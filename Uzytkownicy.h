@@ -15,5 +15,7 @@ void wyszukajUzytkownika(const std::vector<Uzytkownik> & uzytkownicy);
 void usunUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
 void edytujUzytkownika(std::vector<Uzytkownik> & uzytkownicy);
 void menuUzytkownicy(std::vector<Uzytkownik>& uzytkownicy);
+void zapiszDoPliku(const std::vector<Uzytkownik>& uzytkownicy);
+void wczytajZPliku(std::vector<Uzytkownik>& uzytkownicy);
 
 #endif
